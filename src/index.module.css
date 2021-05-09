@@ -1,0 +1,99 @@
+body {
+  margin: 0;
+  background-color: #0c0505;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.ContainerRow  {
+  display: grid;
+  text-align: center;
+  border: none;
+  font-size: 30px;
+  grid-template-columns: 25% 25% 25% 25%;
+}
+
+
+.ContainerRowDiv  {
+  border: 0.2rem solid #231d1d;
+  padding-top: 10px;
+  
+}
+
+.ContainerRowDiv:hover
+{
+  cursor:pointer;
+}
+
+.MainContainer
+{
+  height: 100vh;
+  width: 100%;
+  display: grid;
+  grid-template-rows: 10% 70%;
+}
+
+.CalculatorDisplay
+{
+  width: 40%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 50% 50%;
+  margin: auto;
+  text-align: right;
+  background-color: teal;
+  color: white;
+}
+
+.CalculatorDisplay div
+{
+ padding: 5px;
+}
+
+
+.Header
+{
+  width: 40%;
+  margin: auto;
+  text-align: center;
+  color: antiquewhite;
+}
+.KeypadArea
+{
+  display: grid;
+  border: none;
+  width: 40%;
+  margin: 0 auto;
+  color: whitesmoke;
+  grid-template-rows: 10% 20% 20% 20% 20%;
+}
+
+
+
+.ActionArea
+{
+  text-align: center;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  color: whitesmoke;
+}
+
+.ActionArea div{
+  margin: auto;
+}
+
+.ActionArea div:hover{
+ cursor: pointer;
+}
+
+.KeypadArea div{
+  background-color: #343834;
+}
