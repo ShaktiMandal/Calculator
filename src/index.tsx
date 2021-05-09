@@ -8,7 +8,7 @@ export default  function App(): JSX.Element{
   const [operator, setOperator] = useState("");
   const [leftNumber, setLeftNumber] = useState(0);
   const [eqution, SetEquation] = useState("");
-  const [equationString, setEquationString] = useState("");
+  const [displayEquationText, displayEquation] = useState("");
   const [selectIndex, setIndex] = useState(0);
   const [calculatedNumber, setCalculatedNumber] = useState(0);
 
@@ -17,7 +17,7 @@ export default  function App(): JSX.Element{
     setCalculatedNumber(0);
     setIndex(0);
     setOperator("");
-    setEquationString("")
+    displayEquation("")
   }
 
   const OnRemoveNumber = () : void => {
@@ -29,7 +29,7 @@ export default  function App(): JSX.Element{
 
   const OnSelectedNumber = (digit: string) : void =>{
      var updatedEquation = eqution.concat(digit);   
-     setEquationString(updatedEquation);
+     displayEquation(updatedEquation);
 
      if(digit.includes("+")|| digit.includes("-") || digit.includes("*")|| digit.includes("/"))
      {        
@@ -57,16 +57,16 @@ export default  function App(): JSX.Element{
   const GetEuqationResult = (updatedEquation: string, digit: string) :number =>{
 
       let addNumber : number = 0;
-      let temp = selectIndex;
-      let currentOperator = operator;
+      let previousIndex = selectIndex;
       let prevousNumber = leftNumber;
       let currentIndex = updatedEquation.indexOf(digit);
+      
       if(selectIndex === currentIndex)
       {
         currentIndex = updatedEquation.length - 1;
       }
-      temp = temp === 0 ? temp : temp+1;
-      let number = updatedEquation.slice(temp, currentIndex);
+      previousIndex = previousIndex === 0 ? previousIndex : previousIndex+1;
+      let number = updatedEquation.slice(previousIndex, currentIndex);
 
       switch(operator)
       {
@@ -101,22 +101,22 @@ export default  function App(): JSX.Element{
 
   const GetOperation = () : string => {
 
-        if(equationString.includes("/"))
+        if(displayEquationText.includes("/"))
         {
           return "/";
         }
 
-        if(equationString.includes("*"))
+        if(displayEquationText.includes("*"))
         {
           return "*";
         }
 
-        if(equationString.includes("+"))
+        if(displayEquationText.includes("+"))
         {
           return "+";
         }
 
-        if(equationString.includes("-"))
+        if(displayEquationText.includes("-"))
         {
           return "-";
         }
@@ -127,9 +127,9 @@ export default  function App(): JSX.Element{
   const PerformOperation = (digit: string):void =>{
 
       let calculatedNumber :number = 0;
-      let index = equationString.indexOf(digit);
-      let leftNumber = equationString.substring(0, index);
-      let rightNumber = equationString.substring(index + 1 , equationString.length);
+      let index = displayEquationText.indexOf(digit);
+      let leftNumber = displayEquationText.substring(0, index);
+      let rightNumber = displayEquationText.substring(index + 1 , displayEquationText.length);
 
       switch(digit)
       {
