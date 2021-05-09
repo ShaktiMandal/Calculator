@@ -1,147 +1,160 @@
 import classes from './index.module.css';
 import  { Fragment, useState } from 'react';
+import ReactDOM from 'react-dom'
 
 
 export default  function App(): JSX.Element{
 
   const [operator, setOperator] = useState("");
   const [leftNumber, setLeftNumber] = useState(0);
-  const [selectedNumber, setNumber] = useState("");
+  const [eqution, SetEquation] = useState("");
   const [equationString, setEquationString] = useState("");
   const [selectIndex, setIndex] = useState(0);
   const [calculatedNumber, setCalculatedNumber] = useState(0);
-  const [indexMap, setIndexMap] = useState(new Array<number>());
 
   const OnClearDisplay = () : void => {
-    setNumber("");
+    SetEquation("");
     setCalculatedNumber(0);
     setIndex(0);
-    setIndexMap(new Array<number>());
     setOperator("");
     setEquationString("")
   }
 
   const OnRemoveNumber = () : void => {
 
-    let updatedString = selectedNumber.substring(0, selectedNumber.length -1);
-    setNumber(updatedString);
+    let updatedString = eqution.substring(0, eqution.length -1);
+    SetEquation(updatedString);
 
   }
 
   const OnSelectedNumber = (digit: string) : void =>{
-     var updatedString = selectedNumber.concat(digit);   
-     setEquationString(updatedString);
-     if(digit.includes("+")
-     || digit.includes("-") 
-     || digit.includes("*")
-     || digit.includes("/")
-     )
-     {
-        let temp = selectIndex;
-        let previousIndexMap = indexMap;
-        let currentOperator = operator;
-        let prevousNumber = leftNumber;
-        let currentIndex = updatedString.indexOf(digit);
-        previousIndexMap.push(currentIndex);
-        setIndexMap(previousIndexMap);
-        if(selectIndex === currentIndex)
-        {
-          currentIndex = updatedString.length - 1;
-        }
-        temp = temp === 0 ? temp : temp+1;
-        let number = updatedString.slice(temp, currentIndex);
-             
-        if(number !== "0")
-        {
-          var addNumber : number = 0;
-          switch(currentOperator)
-          {
-              case "+":
-                {
-                  addNumber = prevousNumber + parseFloat(number);
-                  break;
-                }
-              case "-":
-                {
-                  addNumber = prevousNumber - parseFloat(number);
-                  break;
-                }
-              case "*":
-                {
-                  addNumber = prevousNumber * parseFloat(number);
-                  break;
-                }
-              case "/":
-                {
-                  addNumber = prevousNumber / parseFloat(number);
-                  break;
-                }
-              default:
-                {
-                  addNumber = addNumber + parseFloat(number);
-                }
-          }
+     var updatedEquation = eqution.concat(digit);   
+     setEquationString(updatedEquation);
+
+     if(digit.includes("+")|| digit.includes("-") || digit.includes("*")|| digit.includes("/"))
+     {        
+          var addNumber : number = GetEuqationResult(updatedEquation, digit);
           setCalculatedNumber(addNumber);
           setLeftNumber(addNumber); 
-          setNumber(addNumber + digit);
+          SetEquation(addNumber + digit);
           setIndex((addNumber + digit).indexOf(digit)); 
-          setOperator(digit);        
-        }
-
+          setOperator(digit);
      }
      else if(digit.includes("="))
      {
-        let isCalculationRequired : boolean = true;
-        var calculatedNumber :number = 0;
-        var updatedEquation : string  = "";
-
-        if(equationString.includes("/"))
+        let operation = GetOperation();
+        if(operation !== "")
         {
-          let index = equationString.indexOf("/");
-
-
-          let leftNumber = equationString.substring(0, index);
-          let rightNumber = equationString.substring(index + 1 , equationString.length);
-
-          calculatedNumber = parseFloat(leftNumber) / parseFloat(rightNumber);
-         
+            PerformOperation(operation);
         }
-        else if(equationString.includes("*"))
-        {
-          let index = equationString.indexOf("*");
-
-
-          let leftNumber = equationString.substring(0, index);
-          let rightNumber = equationString.substring(index + 1 , equationString.length);
-
-          calculatedNumber = parseFloat(leftNumber) * parseFloat(rightNumber);
-        }
-        else if(equationString.includes("+"))
-        {
-          let index = equationString.indexOf("+");
-
-
-          let leftNumber = equationString.substring(0, index);
-          let rightNumber = equationString.substring(index + 1 , equationString.length);
-          calculatedNumber = parseFloat(leftNumber) + parseFloat(rightNumber);
-        }
-        else if(equationString.includes("-"))
-        {
-          let index = equationString.indexOf("-");
-
-
-          let leftNumber = equationString.substring(0, index);
-          let rightNumber = equationString.substring(index + 1 , equationString.length);
-
-          calculatedNumber = parseFloat(leftNumber) - parseFloat(rightNumber);
-        }
-
-        setCalculatedNumber(calculatedNumber);
      }
      else
      {
-      setNumber(updatedString);
+        SetEquation(updatedEquation);
      }
+  }
+
+  const GetEuqationResult = (updatedEquation: string, digit: string) :number =>{
+
+      let addNumber : number = 0;
+      let temp = selectIndex;
+      let currentOperator = operator;
+      let prevousNumber = leftNumber;
+      let currentIndex = updatedEquation.indexOf(digit);
+      if(selectIndex === currentIndex)
+      {
+        currentIndex = updatedEquation.length - 1;
+      }
+      temp = temp === 0 ? temp : temp+1;
+      let number = updatedEquation.slice(temp, currentIndex);
+
+      switch(operator)
+      {
+          case "+":
+            {
+              addNumber = prevousNumber + parseFloat(number);
+              break;
+            }
+          case "-":
+            {
+              addNumber = prevousNumber - parseFloat(number);
+              break;
+            }
+          case "*":
+            {
+              addNumber = prevousNumber * parseFloat(number);
+              break;
+            }
+          case "/":
+            {
+              addNumber = prevousNumber / parseFloat(number);
+              break;
+            }
+          default:
+            {
+              addNumber = addNumber + parseFloat(number);
+            }
+      }
+
+      return addNumber;
+  }
+
+  const GetOperation = () : string => {
+
+        if(equationString.includes("/"))
+        {
+          return "/";
+        }
+
+        if(equationString.includes("*"))
+        {
+          return "*";
+        }
+
+        if(equationString.includes("+"))
+        {
+          return "+";
+        }
+
+        if(equationString.includes("-"))
+        {
+          return "-";
+        }
+
+        return "";
+  }
+
+  const PerformOperation = (digit: string):void =>{
+
+      let calculatedNumber :number = 0;
+      let index = equationString.indexOf(digit);
+      let leftNumber = equationString.substring(0, index);
+      let rightNumber = equationString.substring(index + 1 , equationString.length);
+
+      switch(digit)
+      {
+          case "/":
+          {
+            calculatedNumber = parseFloat(leftNumber) / parseFloat(rightNumber);
+            break;
+          }
+          case "*":
+          {
+            calculatedNumber = parseFloat(leftNumber) * parseFloat(rightNumber);
+            break;
+          }
+          case "+":
+          {
+            calculatedNumber = parseFloat(leftNumber) + parseFloat(rightNumber);
+            break;
+          }
+          case "-":
+          {
+            calculatedNumber = parseFloat(leftNumber) - parseFloat(rightNumber);
+            break;
+          }
+      };     
+      setCalculatedNumber(calculatedNumber);
   }
 
   return(
@@ -151,7 +164,7 @@ export default  function App(): JSX.Element{
       </div>
       <div className={classes.MainContainer}>
         <div className={classes.CalculatorDisplay}>
-              <div>{selectedNumber}</div>
+              <div>{eqution}</div>
               <div>{calculatedNumber}</div>
         </div>
         <div className={classes.KeypadArea}>
@@ -191,6 +204,8 @@ export default  function App(): JSX.Element{
     </Fragment>   
   )
 }
+
+ReactDOM.render(<App/>, document.getElementById('root'));
   
 
 
